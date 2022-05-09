@@ -23,21 +23,21 @@ RUN echo 'Building plugin with debug symbols' && \
 # Copy binary to debian
 FROM debian:buster-slim
 
-#VOLUME [ "/krakend" ]
+VOLUME [ "/krakend" ]
 
 USER root
 
 COPY --from=builder /usr/local/go /usr/local/go
 COPY --from=builder /go/bin/dlv /go/bin/dlv
-COPY --from=builder /debug/krakend/cmd/krakend-ce/krakend /krakend/krakend
-COPY --from=builder /debug/plugin/krakend-debugger/krakend-debugger.so /krakend/plugin/krakend-debugger.so
-COPY --from=builder /debug/krakend.json /krakend/krakend.json
+COPY --from=builder /debug/krakend/cmd/krakend-ce/krakend /debug/krakend
+COPY --from=builder /debug/plugin/krakend-debugger/krakend-debugger.so /debug/plugin/krakend-debugger.so
+COPY --from=builder /debug/krakend.json /debug/krakend.json
 
-RUN chmod ugo+x /krakend/krakend && \
+RUN chmod ugo+x /debug/krakend && \
     export PATH=/go/bin:/usr/local/go/bin:$PATH
 
 # Set workdir
-WORKDIR /krakend
+WORKDIR /debug
 
 # Set entrypoints
 #ENTRYPOINT [ \
@@ -47,6 +47,6 @@ WORKDIR /krakend
 #    "--api-version=2", \
 #    "--accept-multiclient", \
 #    "exec", \
-#    "/krakend/krakend", \
-#    "-- run -c /krakend/krakend.json" \
+#    "/debug/krakend", \
+#    "-- run -c /debug/krakend.json" \
 #]
