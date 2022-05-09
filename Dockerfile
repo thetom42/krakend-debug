@@ -7,35 +7,46 @@ RUN go install github.com/go-delve/delve/cmd/dlv@latest
 ADD . /debug
 
 # Cloning krakend-ce
-WORKDIR /debug/cmd
-RUN git clone -b v2.0.4 --depth 1 https://github.com/devopsfaith/krakend-ce.git krakend-ce
+WORKDIR /debug
+RUN git clone -b v2.0.4 --depth 1 https://github.com/devopsfaith/krakend-ce.git krakend
 
 # Building local krakend-ce
-WORKDIR /debug/cmd/krakend-ce
+WORKDIR /debug/krakend/cmd/krakend-ce
 RUN echo 'Building local KrakenD v2.0.4 with debug symbols' && \
     go build -gcflags="all=-N -l"  -o krakend
 
 # Building plugin
-WORKDIR /debug/cmd/krakend-debugger
+WORKDIR /debug/plugin/krakend-debugger
 RUN echo 'Building plugin with debug symbols' && \
     go build -gcflags="all=-N -l" -buildmode=plugin -o krakend-debugger.so
 
 # Copy binary to debian
 FROM debian:buster-slim
 
-#VOLUME [ "/debug" ]
+#VOLUME [ "/krakend" ]
 
 USER root
 
+COPY --from=builder /usr/local/go /usr/local/go
 COPY --from=builder /go/bin/dlv /go/bin/dlv
-COPY --from=builder /debug/cmd/krakend-ce/krakend /debug/cmd/krakend-ce/krakend
-COPY --from=builder /debug/cmd/krakend-debugger/krakend-debugger.so /debug/cmd/krakend-ce/plugin/krakend-debugger.so
-COPY --from=builder /debug/krakend.json /debug/cmd/krakend-ce/krakend.json
+COPY --from=builder /debug/krakend/cmd/krakend-ce/krakend /krakend/krakend
+COPY --from=builder /debug/plugin/krakend-debugger/krakend-debugger.so /krakend/plugin/krakend-debugger.so
+COPY --from=builder /debug/krakend.json /krakend/krakend.json
 
-RUN chmod ugo+x /debug/cmd/krakend-ce/krakend
+RUN chmod ugo+x /krakend/krakend && \
+    export PATH=/go/bin:/usr/local/go/bin:$PATH
 
-#set workdir
-WORKDIR /debug/cmd/krakend-ce
+# Set workdir
+WORKDIR /krakend
 
-#set entrypoints
-#ENTRYPOINT [ "/go/bin/dlv", "--listen= :40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/debug/cmd/krakend", "-- run -c /debug/cmd/krakend.json" ]
+# Set entrypoints
+#ENTRYPOINT [ \
+#    "/go/bin/dlv", \
+#    "--listen= :40000", \
+#    "--headless=true", \
+#    "--api-version=2", \
+#    "--accept-multiclient", \
+#    "exec", \
+#    "/krakend/krakend", \
+#    "-- run -c /krakend/krakend.json" \
+#]
