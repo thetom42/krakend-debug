@@ -33,7 +33,8 @@ COPY --from=builder /debug/krakend/cmd/krakend-ce/krakend /debug/krakend
 COPY --from=builder /debug/plugin/krakend-debugger/krakend-debugger.so /debug/plugin/krakend-debugger.so
 COPY --from=builder /debug/krakend.json /debug/krakend.json
 
-RUN chmod ugo+x /debug/krakend && \
+RUN chmod ugo+x /debug/krakend
+
 ENV PATH=/go/bin:/usr/local/go/bin:$PATH
 
 # Set workdir
