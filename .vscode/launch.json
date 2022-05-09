@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "krakend-debug",
+            "type": "go",
+            "request": "attach",
+            "mode": "remote",
+            "remotePath": "/debug",
+            "port": 40000,
+            "host": "https://40000-cs-996093573844-default.cs-europe-west1-iuzs.cloudshell.dev/?authuser=0"
+        }
+    ]
+}
