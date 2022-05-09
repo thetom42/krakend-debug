@@ -34,7 +34,7 @@ COPY --from=builder /debug/plugin/krakend-debugger/krakend-debugger.so /debug/pl
 COPY --from=builder /debug/krakend.json /debug/krakend.json
 
 RUN chmod ugo+x /debug/krakend && \
-    export PATH=/go/bin:/usr/local/go/bin:$PATH
+ENV PATH=/go/bin:/usr/local/go/bin:$PATH
 
 # Set workdir
 WORKDIR /debug
