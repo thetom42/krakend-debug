@@ -32,6 +32,8 @@ COPY --from=builder /debug/cmd/krakend-ce/krakend /debug/cmd/krakend-ce/krakend
 COPY --from=builder /debug/cmd/krakend-debugger/krakend-debugger.so /debug/cmd/krakend-ce/plugin/krakend-debugger.so
 COPY --from=builder /debug/krakend.json /debug/cmd/krakend-ce/krakend.json
 
+RUN chmod ugo+x /debug/cmd/krakend-ce/krakend
+
 #set workdir
 WORKDIR /debug/cmd/krakend-ce
 
