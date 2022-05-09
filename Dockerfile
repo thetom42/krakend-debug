@@ -41,13 +41,13 @@ ENV PATH=/go/bin:/usr/local/go/bin:$PATH
 WORKDIR /debug
 
 # Set entrypoints
-#ENTRYPOINT [ \
-#    "/go/bin/dlv", \
-#    "--listen= :40000", \
-#    "--headless=true", \
-#    "--api-version=2", \
-#    "--accept-multiclient", \
-#    "exec", \
-#    "/debug/krakend", \
-#    "-- run -c /debug/krakend.json" \
-#]
+ENTRYPOINT [ \
+    "/go/bin/dlv", \
+    "--listen= :40000", \
+    "--headless=true", \
+    "--api-version=2", \
+    "--accept-multiclient", \
+    "exec", \
+    "/debug/krakend", \
+    "-- run -c /debug/krakend.json" \
+]
