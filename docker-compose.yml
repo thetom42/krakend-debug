@@ -1,7 +1,6 @@
 version: '3.0'
 services:
-
- krakend:
+  krakend:
     container_name: krakend
     build:
       context: .
