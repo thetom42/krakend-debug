@@ -23,7 +23,7 @@ RUN echo 'Building plugin with debug symbols' && \
 # Copy binary to debian
 FROM debian:buster-slim
 
-VOLUME [ "/debug" ]
+#VOLUME [ "/debug" ]
 
 USER root
 
@@ -36,4 +36,4 @@ COPY --from=builder /debug/krakend.json /debug/cmd/krakend-ce/krakend.json
 WORKDIR /debug/cmd/krakend-ce
 
 #set entrypoints
-ENTRYPOINT [ "/go/bin/dlv", "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/debug/cmd/krakend" "-- run -c /debug/cmd/krakend.json" ]
+#ENTRYPOINT [ "/go/bin/dlv", "--listen= :40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/debug/cmd/krakend", "-- run -c /debug/cmd/krakend.json" ]
