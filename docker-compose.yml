@@ -5,7 +5,7 @@ services:
     container_name: krakend
     build:
       context: .
-      dockerfile: debug/Dockerfile
+      dockerfile: Dockerfile
     volumes:
       - /home/thetom42/repos/thetom42/krakend-debug:/debug
     #THESE 4 LINES are IMPORTANT FOR DEBUGGING
