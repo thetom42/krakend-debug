@@ -1,6 +1,6 @@
 {
     "version": 3,
-    "name": "Krakend Okteto",
+    "name": "Krakend Debug",
     "cache_ttl": "3600s",
     "timeout": "3s",
     "extra_config": {
@@ -27,7 +27,7 @@
       }
     },
     "plugin": {
-        "folder": "./plugin",
+        "folder": "/debug/plugin",
         "pattern": ".so"
     },
     "endpoints": [
