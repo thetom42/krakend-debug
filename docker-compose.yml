@@ -1,11 +1,11 @@
 version: '3.0'
 services:
-  krakend:
+  krakend-debug:
     container_name: krakend-debug
-    image: krakend-debug
     build:
       context: .
       dockerfile: Dockerfile
+    #image: krakend-debug
     volumes:
       - $PWD:/krakend:rw,delegated
     #THESE 4 LINES are IMPORTANT FOR DEBUGGING
