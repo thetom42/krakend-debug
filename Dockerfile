@@ -1,4 +1,4 @@
-FROM golang:1.17-alpine AS base
+FROM golang:1.17 AS base
 WORKDIR /debug
 
 # Get air and build Delve
