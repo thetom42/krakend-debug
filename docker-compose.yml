@@ -1,21 +1,22 @@
-version: '3.0'
+version: "3.8"
 services:
-  krakend-debug:
-    container_name: krakend-debug
+  my-service:
+    container_name: my-service
+    #image: delve-test
     build:
       context: .
-      dockerfile: Dockerfile
-    #image: krakend-debug
+      dockerfile: Dockerfile.my-service
+      target: dev
     volumes:
-      - $PWD:/krakend:rw,delegated
-    #THESE 4 LINES are IMPORTANT FOR DEBUGGING
-    security_opt:
-      - "seccomp:unconfined"
+    - .:/app:rw,delegated
+    networks:
+    - my_network
     cap_add:
-      - SYS_PTRACE
+    - SYS_PTRACE
     ports:
-      - 8080:8080
-      - 8090:8090 
-      - 2345:2345   ## THIS PORT IS THE DEBUGGER PORT THAT NEED TO BE EXPOSED.
-    #THIS IS THE SAME AS THE ENTRYPOINT notice the --  --config for passing parameters
-    #entrypoint: /go/bin/dlv --headless --listen=:2345 --api-version=2 exec /debug/krakend -- run -ddd -c /debug/krakend.json  
+    - 8080:8080
+    - 2345:2345
+
+networks:
+  my_network:
+    name: my_network
