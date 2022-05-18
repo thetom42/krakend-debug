@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "krakend-debug",
+            "name": "carmen-api-gateway-debug",
             "type": "go",
             "request": "attach",
             "mode": "remote",
@@ -16,6 +16,16 @@
             "host": "127.0.0.1",
             "showLog": true,
             "apiVersion": 2,
+            "trace": "verbose"
+        },
+        {
+            "name": "krakend-debug",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/tmp/krakend/cmd/krakend-ce/main.go",
+            "showLog": true,
+            "args": ["run", "-d", "-c", "${workspaceFolder}/krakend.json"],
             "trace": "verbose"
         },
         {
