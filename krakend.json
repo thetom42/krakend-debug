@@ -27,7 +27,7 @@
       }
     },
     "plugin": {
-        "folder": "/workspace/krakend-debug/plugin",
+        "folder": "./plugin",
         "pattern": ".so"
     },
     "endpoints": [

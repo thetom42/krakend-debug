@@ -23,14 +23,17 @@
 	
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"golang.Go"
+		"golang.Go",
+		"rangav.vscode-thunder-client"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "go version",
+	"postCreateCommand": "cd ./plugin && go build -gcflags='all=-N -l' -buildmode=plugin -o krakend-debugger.so",
+	"postStartCommand": "git clone -b v2.0.4 --depth 1 https://github.com/devopsfaith/krakend-ce.git krakend && cd krakend && go mod vendor -v",
+
 
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode"
