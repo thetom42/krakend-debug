@@ -6,8 +6,11 @@ image: gitpod/workspace-full
 
 tasks:
   - name: krakend-debug
-    init: git clone -b v2.0.4 --depth 1 https://github.com/devopsfaith/krakend-ce.git krakend
-    command: cd plugin && go build -gcflags="all=-N -l" -buildmode=plugin -o krakend-debugger.so
+    init: |
+        git clone -b v2.0.4 --depth 1 https://github.com/devopsfaith/krakend-ce.git krakend
+        cd krakend/cmd/krakend-ce
+        go mod vendor
+    command: cd plugin && go build -gcflags="all=-N -l" -buildmode=plugin -o krakend-debugger.so && cd ..
 
 vscode:
   extensions:
