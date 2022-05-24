@@ -1,3 +1,4 @@
 tmp/*
-my-service
 *.so
+main
+build-errors.log

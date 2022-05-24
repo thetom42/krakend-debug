@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  my-service:
+    container_name: my-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+    - .:/app:rw,delegated
+    networks:
+    - my_network
+    cap_add:
+    - SYS_PTRACE
+    ports:
+    - 8080:8080
+    - 2345:2345
+
+networks:
+  my_network:
+    name: my_network
