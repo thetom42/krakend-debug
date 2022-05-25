@@ -2,3 +2,4 @@ tmp/*
 *.so
 main
 build-errors.log
+krakend/
