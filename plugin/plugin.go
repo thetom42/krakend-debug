@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"math/rand"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"strconv"
 	"strings"
-	"time"
+
+	"github.com/gofrs/uuid"
 )
 
 const plugin_name = "krakend-debugger"
@@ -127,10 +126,13 @@ func (r registerer) registerHandlers(ctx context.Context, extra map[string]inter
 
 	// return the actual handler wrapping or your custom logic so it can be used as a replacement for the default http handler
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		// Create a unique request id - "github.com/google/uuid.NewString()" causes "plugin was built with a different version of package"
-		t := time.Now().UnixNano()
-		reqid := strconv.FormatInt(t, 36) + "_" + strconv.Itoa(rand.Intn(32768))
-		req.Header["Requuid"] = []string{reqid}
+		// Create a unique request id
+		reqid, err := uuid.NewV4()
+		if err != nil {
+			logF(fmt.Sprintf("[PLUGIN: %s] Failed to generate UUID", err))
+		}
+
+		req.Header["Requuid"] = []string{reqid.String()}
 
 		dump, err := httputil.DumpRequest(req, true)
 		if err != nil {
@@ -141,7 +143,7 @@ func (r registerer) registerHandlers(ctx context.Context, extra map[string]inter
 
 		if true {
 			// Request id and URL are the main keys
-			keys := map[string]string{"id": reqid, "url": req.URL.Path}
+			keys := map[string]string{"id": reqid.String(), "url": req.URL.Path}
 
 			if false {
 				// Add first 6 path segments, i.e. URL parts delimited by '/' as additional keys
@@ -159,11 +161,11 @@ func (r registerer) registerHandlers(ctx context.Context, extra map[string]inter
 			}
 
 			// Get non-blocking write client
-			p := influx.NewPoint("payload",
-				keys,
-				map[string]interface{}{"request": rqstr},
-				time.Now())
-			writeAPI.WritePoint(p)
+			//p := influx.NewPoint("payload",
+			//	keys,
+			//	map[string]interface{}{"request": rqstr},
+			//	time.Now())
+			//writeAPI.WritePoint(p)
 		}
 
 		old.ServeHTTP(w, req)
@@ -195,7 +197,7 @@ func (r registerer) RegisterModifiers(f func(
 func (registerer) RegisterLogger(in interface{}) {
 	l, ok := in.(Logger)
 	if !ok {
-		fmt.Println(fmt.Sprintf("[PLUGIN: %s] No logger registered!", ModifierRegisterer))
+		fmt.Printf("[PLUGIN: %s] No logger registered!", ModifierRegisterer)
 		return
 	}
 
@@ -290,6 +292,9 @@ func makeOriginalRequest(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(resp.StatusCode)
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		logF("err", err.Error())
+	}
 	w.Write(body)
 
 	if rqerr != nil {
@@ -302,20 +307,20 @@ func makeOriginalRequest(w http.ResponseWriter, req *http.Request) {
 	if rserr != nil {
 		logF("rserr", rserr.Error())
 	}
-	var reqid string
-	reqid = req.Header["Requuid"][0]
+
+	reqid := req.Header["Requuid"][0]
 	res := string(dumprs) + string(body)
 	logD("req_id ", reqid)
 	logD("res ", res, "\n")
 
-	if true {
-		// get non-blocking write client
-		p := influx.NewPoint("payload",
-			map[string]string{"id": reqid},
-			map[string]interface{}{"backend_request": rqstr, "response": res},
-			time.Now())
-		writeAPI.WritePoint(p)
-	}
+	//if true {
+	// get non-blocking write client
+	//p := influx.NewPoint("payload",
+	//	map[string]string{"id": reqid},
+	//	map[string]interface{}{"backend_request": rqstr, "response": res},
+	//	time.Now())
+	//writeAPI.WritePoint(p)
+	//}
 }
 
 func logD(v ...interface{}) {
