@@ -2,7 +2,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "carmen-api-gateway-debug",
+            "name": "KrakenD",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/krakend/cmd/krakend-ce/main.go",
+            "cwd": "${workspaceFolder}",
+            "showLog": true,
+            "args": ["run", "-d", "-c", "${workspaceFolder}/krakend.json"],
+            "trace": "verbose"
+        },
+        {
+            "name": "KrakenD on okteto",
             "type": "go",
             "request": "attach",
             "mode": "remote",
@@ -19,18 +30,7 @@
             "trace": "verbose"
         },
         {
-            "name": "krakend-debug",
-            "type": "go",
-            "request": "launch",
-            "mode": "debug",
-            "program": "${workspaceFolder}/krakend/cmd/krakend-ce/main.go",
-            "cwd": "${workspaceFolder}",
-            "showLog": true,
-            "args": ["run", "-d", "-c", "${workspaceFolder}/krakend.json"],
-            "trace": "verbose"
-        },
-        {
-            "name": "Delve into Docker",
+            "name": "Sample App",
             "type": "go",
             "request": "attach",
             "mode": "remote",

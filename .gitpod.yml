@@ -2,10 +2,18 @@
 # Please adjust to your needs (see https://www.gitpod.io/docs/config-gitpod-file)
 # and commit this file to your remote git repository to share the goodness with others.
 
-#image: gitpod/workspace-go
+image: gitpod/workspace-full
 
-#tasks:
-#  - init: go get && go build ./... && go test ./...
-#    command: go run
+tasks:
+  - name: krakend-debug
+    init: |
+        git clone -b v2.0.4 --depth 1 https://github.com/devopsfaith/krakend-ce.git krakend
+        cd krakend/cmd/krakend-ce
+        go mod vendor
+        cd /workspace/krakend-debug
+    command: cd plugin && go build -gcflags="all=-N -l" -buildmode=plugin -o krakend-debugger.so && cd ..
 
-
+vscode:
+  extensions:
+    - golang.go
+    - rangav.vscode-thunder-client
