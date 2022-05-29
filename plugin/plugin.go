@@ -118,13 +118,13 @@ func (r registerer) RegisterHandlers(f func(name string, handler func(context.Co
 
 func (r registerer) registerHandlers(ctx context.Context, extra map[string]interface{}, old http.Handler) (h http.Handler, e error) {
 	// check the passed configuration and initialize the plugin
-	name, ok := extra["name"].(string)
-	if !ok {
-		return nil, errors.New("wrong config")
-	}
-	if name != string(r) {
-		return nil, fmt.Errorf("unknown register %s", name)
-	}
+	//name, ok := extra["name"].(string)
+	//if !ok {
+	//	return nil, errors.New("wrong config")
+	//}
+	//if name != string(r) {
+	//	return nil, fmt.Errorf("unknown register %s", name)
+	//}
 
 	// return the actual handler wrapping or your custom logic so it can be used as a replacement for the default http handler
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
