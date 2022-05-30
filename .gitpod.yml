@@ -11,7 +11,11 @@ tasks:
         cd krakend/cmd/krakend-ce
         go mod vendor
         cd /workspace/krakend-debug
-    command: cd plugin && go build -gcflags="all=-N -l" -buildmode=plugin -o krakend-debugger.so && cd ..
+    command: |
+        git config pull.rebase false
+        cd plugin
+        go build -gcflags="all=-N -l" -buildmode=plugin -o krakend-debugger.so
+        cd ..
 
 vscode:
   extensions:
