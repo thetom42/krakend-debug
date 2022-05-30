@@ -1,21 +1,36 @@
 version: '3.0'
 services:
-  krakend-debug:
-    container_name: krakend-debug
-    build:
-      context: .
-      dockerfile: Dockerfile
-    #image: krakend-debug
-    volumes:
-      - $PWD:/krakend:rw,delegated
-    #THESE 4 LINES are IMPORTANT FOR DEBUGGING
-    security_opt:
-      - "seccomp:unconfined"
-    cap_add:
-      - SYS_PTRACE
+  influxdb:
+    image: influxdb:1.8
+    environment:
+      - "INFLUXDB_DB=krakend"
+      - "INFLUXDB_USER=krakend"
+      - "INFLUXDB_USER_PASSWORD=krakend"
+      - "INFLUXDB_ADMIN_USER=admin"
+      - "INFLUXDB_ADMIN_PASSWORD=admin"
     ports:
-      - 8080:8080
-      - 8090:8090 
-      - 2345:2345   ## THIS PORT IS THE DEBUGGER PORT THAT NEED TO BE EXPOSED.
+      - "8086:8086"
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+#  krakend-debug:
+#    container_name: krakend-debug
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    image: krakend-debug
+#    volumes:
+#      - $PWD:/krakend:rw,delegated
+    #THESE 4 LINES are IMPORTANT FOR DEBUGGING
+#    security_opt:
+#      - "seccomp:unconfined"
+#    cap_add:
+#      - SYS_PTRACE
+#    ports:
+#      - 8080:8080
+#      - 8090:8090 
+#      - 2345:2345   ## THIS PORT IS THE DEBUGGER PORT THAT NEED TO BE EXPOSED.
     #THIS IS THE SAME AS THE ENTRYPOINT notice the --  --config for passing parameters
     #entrypoint: /go/bin/dlv --headless --listen=:2345 --api-version=2 exec /debug/krakend -- run -ddd -c /debug/krakend.json  

@@ -18,6 +18,20 @@
         "endpoint_disabled": false,
         "listen_address": ":8090"
       },
+      "telemetry/influx":{
+        "address":"http://localhost:8086",
+        "ttl":"25s"
+      },
+      "telemetry/opencensus": {
+        "sample_rate": 100,
+        "reporting_period": 1,
+        "exporters": {
+          "jaeger": {
+            "endpoint": "http://localhost:14268/api/traces",
+            "service_name":"krakend"
+          }
+        }
+      },
       "security/cors": {
         "allow_origins": [ "http://192.168.99.100:3000", "http://localhost:3000", "http://localhost:8080" ],
         "allow_methods": [ "POST", "GET" ],
