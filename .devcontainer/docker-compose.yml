@@ -10,8 +10,8 @@ services:
     image: influxdb:1.8
     environment:
       - "INFLUXDB_DB=krakend"
-      - "INFLUXDB_USER=krakend-dev"
-      - "INFLUXDB_USER_PASSWORD=pas5w0rd"
+      - "INFLUXDB_USER=krakend"
+      - "INFLUXDB_USER_PASSWORD=krakend"
       - "INFLUXDB_ADMIN_USER=admin"
       - "INFLUXDB_ADMIN_PASSWORD=supersecretpassword"
     ports:
@@ -43,6 +43,12 @@ services:
   krakend_ce:
     build:
       dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    # Overrides default command so things don't shut down after the process ends.
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
 #  jwt_revoke:
 #    build:
 #      context: ./jwt-revoker
