@@ -4,41 +4,47 @@
     "cache_ttl": "3600s",
     "timeout": "3s",
     "extra_config": {
-      "telemetry/logging": {
-        "level":  "DEBUG",
-        "prefix": "[KRAKEND]",
-        "syslog": false,
-        "stdout": true
-      },
-      "telemetry/metrics": {
-        "collection_time": "60s",
-        "proxy_disabled": false,
-        "router_disabled": false,
-        "backend_disabled": false,
-        "endpoint_disabled": false,
-        "listen_address": ":8090"
-      },
-      "telemetry/influx":{
-        "address":"http://localhost:8086",
-        "ttl":"25s"
-      },
-      "telemetry/opencensus": {
-        "sample_rate": 100,
-        "reporting_period": 1,
-        "exporters": {
-          "jaeger": {
-            "endpoint": "http://localhost:14268/api/traces",
-            "service_name":"krakend"
-          }
+        "telemetry/influx":{
+            "address":"http://localhost:8086",
+            "ttl":"25s"
+        },
+        "telemetry/opencensus": {
+            "sample_rate": 100,
+            "reporting_period": 1,
+            "exporters": {
+                "jaeger": {
+                    "endpoint": "http://localhost:14268/api/traces",
+                    "service_name":"krakend"
+                }
+            }
+        },
+        "telemetry/logging": {
+            "level":  "DEBUG",
+            "prefix": "[KRAKEND]",
+            "syslog": false,
+            "stdout": true
+        },
+        "telemetry/metrics": {
+            "collection_time": "60s",
+            "proxy_disabled": false,
+            "router_disabled": false,
+            "backend_disabled": false,
+            "endpoint_disabled": false,
+            "listen_address": ":8090"
+        },
+        "security/cors": {
+            "allow_origins": [ "http://192.168.99.100:3000", "http://localhost:3000", "http://localhost:8080" ],
+            "allow_methods": [ "POST", "GET" ],
+            "allow_headers": [ "Origin", "Authorization", "Content-Type" ],
+            "expose_headers": [ "Content-Length" ],
+            "max_age": "12h"
+        },
+        "plugin/http-server": {
+            "name": ["krakend-debugger"],
+            "krakend-debugger": {
+                "some_flag_in_my_plugin": true
+            }
         }
-      },
-      "security/cors": {
-        "allow_origins": [ "http://192.168.99.100:3000", "http://localhost:3000", "http://localhost:8080" ],
-        "allow_methods": [ "POST", "GET" ],
-        "allow_headers": [ "Origin", "Authorization", "Content-Type" ],
-        "expose_headers": [ "Content-Length" ],
-        "max_age": "12h"
-      }
     },
     "plugin": {
         "folder": "./plugin",
@@ -89,6 +95,9 @@
                             "interval": 60,
                             "timeout": 10,
                             "max_errors": 1
+                        },
+                        "plugin/http-client": {
+                            "name": "krakend-debugger"
                         }
                     }
                 }

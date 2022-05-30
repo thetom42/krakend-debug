@@ -14,7 +14,7 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-const plugin_name = "krakend-debugger"
+const pluginName = "krakend-debugger"
 
 var (
 	logger Logger = nil
@@ -86,21 +86,22 @@ func (r requestWrapper) Headers() map[string][]string { return r.headers }
 type registerer string
 
 // ClientRegisterer is the symbol the plugin loader will try to load. It must implement the RegisterClient interface
-var ClientRegisterer = registerer(plugin_name)
+var ClientRegisterer = registerer(pluginName)
 
 func (r registerer) RegisterClients(f func(name string, handler func(context.Context, map[string]interface{}) (http.Handler, error))) {
+	logD(fmt.Sprintf("[PLUGIN: %s] client plugin registered!", string(r)))
 	f(string(r), r.registerClients)
 }
 
 func (r registerer) registerClients(ctx context.Context, extra map[string]interface{}) (h http.Handler, e error) {
 	// check the passed configuration and initialize the plugin
-	name, ok := extra["name"].(string)
-	if !ok {
-		return nil, errors.New("wrong config")
-	}
-	if name != string(r) {
-		return nil, fmt.Errorf("unknown register %s", name)
-	}
+	//name, ok := extra["name"].(string)
+	//if !ok {
+	//	return nil, errors.New("wrong config")
+	//}
+	//if name != string(r) {
+	//	return nil, fmt.Errorf("unknown register %s", name)
+	//}
 	// return the actual handler wrapping or your custom logic so it can be used as a replacement for the default http client
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		makeOriginalRequest(w, req)
@@ -108,21 +109,22 @@ func (r registerer) registerClients(ctx context.Context, extra map[string]interf
 }
 
 // HandlerRegisterer is the symbol the plugin loader will try to load. It must implement the Registerer interface
-var HandlerRegisterer = registerer(plugin_name)
+var HandlerRegisterer = registerer(pluginName)
 
 func (r registerer) RegisterHandlers(f func(name string, handler func(context.Context, map[string]interface{}, http.Handler) (http.Handler, error))) {
+	logD(fmt.Sprintf("[PLUGIN: %s] handler plugin registered!", string(r)))
 	f(string(r), r.registerHandlers)
 }
 
 func (r registerer) registerHandlers(ctx context.Context, extra map[string]interface{}, old http.Handler) (h http.Handler, e error) {
 	// check the passed configuration and initialize the plugin
-	name, ok := extra["name"].(string)
-	if !ok {
-		return nil, errors.New("wrong config")
-	}
-	if name != string(r) {
-		return nil, fmt.Errorf("unknown register %s", name)
-	}
+	//name, ok := extra["name"].(string)
+	//if !ok {
+	//	return nil, errors.New("wrong config")
+	//}
+	//if name != string(r) {
+	//	return nil, fmt.Errorf("unknown register %s", name)
+	//}
 
 	// return the actual handler wrapping or your custom logic so it can be used as a replacement for the default http handler
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
@@ -175,7 +177,7 @@ func (r registerer) registerHandlers(ctx context.Context, extra map[string]inter
 // ModifierRegisterer is the symbol the plugin loader will be looking for. It must
 // implement the plugin.Registerer interface
 // https://github.com/luraproject/lura/blob/master/proxy/plugin/modifier.go#L71
-var ModifierRegisterer = registerer(plugin_name)
+var ModifierRegisterer = registerer(pluginName)
 
 // RegisterModifiers is the function the plugin loader will call to register the
 // modifier(s) contained in the plugin using the function passed as argument.
@@ -189,7 +191,7 @@ func (r registerer) RegisterModifiers(f func(
 )) {
 	f(string(r)+"-request", r.requestModifierFactory, true, false)
 	f(string(r)+"-response", r.responseModifierFactory, false, true)
-	logD(fmt.Sprintf("[PLUGIN: %s] Plugin Registered!", string(r)))
+	logD(fmt.Sprintf("[PLUGIN: %s] modifier plugin registered!", string(r)))
 }
 
 // RegisterLogger is the function the plugin loader will call to register the
@@ -308,19 +310,19 @@ func makeOriginalRequest(w http.ResponseWriter, req *http.Request) {
 		logF("rserr", rserr.Error())
 	}
 
-	reqid := req.Header["Requuid"][0]
+	reqid := req.Header["Requuid"]
 	res := string(dumprs) + string(body)
 	logD("req_id ", reqid)
 	logD("res ", res, "\n")
 
-	//if true {
-	// get non-blocking write client
-	//p := influx.NewPoint("payload",
-	//	map[string]string{"id": reqid},
-	//	map[string]interface{}{"backend_request": rqstr, "response": res},
-	//	time.Now())
-	//writeAPI.WritePoint(p)
-	//}
+	//	if true {
+	//		// get non-blocking write client
+	//		p := influx.NewPoint("payload",
+	//			map[string]string{"id": reqid},
+	//			map[string]interface{}{"backend_request": rqstr, "response": res},
+	//			time.Now())
+	//		writeAPI.WritePoint(p)
+	//	}
 }
 
 func logD(v ...interface{}) {
