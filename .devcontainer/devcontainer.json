@@ -28,15 +28,17 @@
 	"extensions": [
 		"golang.Go",
 		"rangav.vscode-thunder-client",
-		"ms-azuretools.vscode-docker"
+		"ms-azuretools.vscode-docker",
+		"influxdata.flux"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	"forwardPorts": [16686,14268,8086],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "cd ./plugin && go build -gcflags='all=-N -l' -buildmode=plugin -o krakend-debugger.so",
+	//"postCreateCommand": "id=$(influx bucket list -o krakend -name krakend | tail -1 | cut -f1) && influx v1 auth create --read-bucket '$id' --write-bucket '$id' --username krakend --password 'krakend123' && influx v1 dbrp create --bucket-id '$id' --db krakend --rp krakend --default",
 	"postStartCommand": "git clone -b v2.0.4 --depth 1 https://github.com/devopsfaith/krakend-ce.git krakend && cd krakend && go mod vendor",
+	"postAttachCommand": "cd ./plugin && go build -gcflags='all=-N -l' -buildmode=plugin -o krakend-debugger.so",
 
 
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
