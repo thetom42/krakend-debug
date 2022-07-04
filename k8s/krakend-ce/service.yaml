@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: krakend
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http
+    - name: metrics
+      port: 8090
+      protocol: TCP
+      targetPort: metrics
+    - name: prometheus
+      port: 9091
+      protocol: TCP
+      targetPort: prometheus
+  selector:
+    app: krakend
+  sessionAffinity: None
+  type: ClusterIP

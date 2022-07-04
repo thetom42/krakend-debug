@@ -1,7 +1,7 @@
 FROM golang:1.18 AS base
 
 # Cloning krakend-ce
-RUN git clone -b v2.0.4 --depth 1 https://github.com/devopsfaith/krakend-ce.git krakend && \
+RUN git clone -b v2.0.5 --depth 1 https://github.com/devopsfaith/krakend-ce.git krakend && \
     cd krakend/cmd/krakend-ce && \
     go mod vendor -v
 

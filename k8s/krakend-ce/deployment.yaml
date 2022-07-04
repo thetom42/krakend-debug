@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: krakend
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: krakend
+  template:
+    metadata:
+      labels:
+        app: krakend
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - krakend
+              topologyKey: topology.kubernetes.io/zone
+      volumes:
+      - name: config-volume
+        configMap:
+          name: krakend-config
+          defaultMode: 0666
+      - name: settings-volume
+        configMap:
+          name: krakend-settings
+          defaultMode: 0666
+      containers:
+      - name: krakend
+        image: devopsfaith/krakend:2.0.5
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: USAGE_DISABLE
+            value: "1"
+          - name: KRAKEND_CONFIG
+            value: "./config/krakend.json"
+          - name: FC_ENABLE
+            value: "1"
+          - name: FC_SETTINGS
+            value: "./config/settings"
+          - name: INFLUX_ORG
+            value: "krakend"
+          - name: INFLUX_BUCKET
+            value: "logpayload"
+          - name: DEBUG_FLAG
+            value: ""
+        #envFrom:
+        #  - secretRef:
+        #      name: krakend-secret
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8090
+          name: metrics
+          protocol: TCP
+        - containerPort: 9091
+          name: prometheus
+          protocol: TCP
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/krakend/config
+        - name: settings-volume
+          mountPath: /etc/krakend/config/settings
+        resources:
+          limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          requests:
+              cpu: "200m"
+              memory: "128Mi"
+        livenessProbe:
+            httpGet:
+              path: /__health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            failureThreshold: 5
+            successThreshold: 1
+            timeoutSeconds: 9
+        readinessProbe:
+            httpGet:
+              path: /__health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            failureThreshold: 5
+            successThreshold: 1
+            timeoutSeconds: 9

@@ -1,0 +1,16 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: krakend
+spec:
+  host: krakend-thetom42-dev.apps.sandbox.x8i5.p1.openshiftapps.com
+  port:
+    targetPort: http
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: krakend
+    weight: 100
+  wildcardPolicy: None
