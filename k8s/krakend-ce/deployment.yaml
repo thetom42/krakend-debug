@@ -34,29 +34,31 @@ spec:
         configMap:
           name: krakend-config
           defaultMode: 0666
-      - name: settings-volume
-        configMap:
-          name: krakend-settings
-          defaultMode: 0666
+#      - name: settings-volume
+#        configMap:
+#          name: krakend-settings
+#          defaultMode: 0666
       containers:
       - name: krakend
         image: devopsfaith/krakend:2.0.5
         imagePullPolicy: IfNotPresent
+        command: ["krakend"]
+        args: ["run", "-d", "-c", "./config/krakend.json"]
         env:
           - name: USAGE_DISABLE
             value: "1"
           - name: KRAKEND_CONFIG
             value: "./config/krakend.json"
-          - name: FC_ENABLE
-            value: "1"
-          - name: FC_SETTINGS
-            value: "./config/settings"
-          - name: INFLUX_ORG
-            value: "krakend"
-          - name: INFLUX_BUCKET
-            value: "logpayload"
-          - name: DEBUG_FLAG
-            value: ""
+#          - name: FC_ENABLE
+#            value: "1"
+#          - name: FC_SETTINGS
+#            value: "./config/settings"
+#          - name: INFLUX_ORG
+#            value: "krakend"
+#          - name: INFLUX_BUCKET
+#            value: "logpayload"
+#          - name: DEBUG_FLAG
+#            value: ""
         #envFrom:
         #  - secretRef:
         #      name: krakend-secret
@@ -73,15 +75,15 @@ spec:
         volumeMounts:
         - name: config-volume
           mountPath: /etc/krakend/config
-        - name: settings-volume
-          mountPath: /etc/krakend/config/settings
+#        - name: settings-volume
+#          mountPath: /etc/krakend/config/settings
         resources:
           limits:
-              cpu: "1000m"
-              memory: "1Gi"
-          requests:
               cpu: "200m"
-              memory: "128Mi"
+              memory: "200Mi"
+          requests:
+              cpu: "50m"
+              memory: "80Mi"
         livenessProbe:
             httpGet:
               path: /__health

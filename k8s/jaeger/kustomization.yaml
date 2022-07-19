@@ -4,23 +4,18 @@ resources:
   - service.yaml
   - route_http.yaml
   - pvc.yaml
-
 crds:
   - ./crds/openshift-route.json
-
 configMapGenerator:
-- name: carmen-jaeger-cm
+- name: jaeger
   files:
     - its_a_file.txt=config/its_a_file.txt
-
 commonLabels:
-  owner: systemteam
-  component: jaegertracing
+  owner: thetom42
+  component: jaeger
   nickname: jaeger
-  
 commonAnnotations:
-  email: "DL-VLCarmenCCSystemTeam@dli.telekom.com"
-
+  email: "thetom42@gmail.com"
 generatorOptions:
   labels:
-    app: carmen-jaeger
+    app: jaeger

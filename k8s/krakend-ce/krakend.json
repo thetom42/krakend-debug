@@ -13,7 +13,7 @@
             "reporting_period": 1,
             "exporters": {
                 "jaeger": {
-                    "endpoint": "http://localhost:14268/api/traces",
+                    "endpoint": "http://jaeger.thetom42-dev.svc.cluster.local:14268/api/traces",
                     "service_name":"krakend"
                 }
             }
@@ -38,12 +38,6 @@
             "allow_headers": [ "Origin", "Authorization", "Content-Type" ],
             "expose_headers": [ "Content-Length" ],
             "max_age": "12h"
-        },
-        "plugin/http-server": {
-            "name": ["krakend-debugger"],
-            "krakend-debugger": {
-                "some_flag_in_my_plugin": true
-            }
         }
     },
     "plugin": {
@@ -95,21 +89,10 @@
                             "interval": 60,
                             "timeout": 10,
                             "max_errors": 1
-                        },
-                        "plugin/http-client": {
-                            "name": "krakend-debugger"
                         }
                     }
                 }
-            ],
-            "extra_config":{
-              "plugin/req-resp-modifier":{
-                "name": [
-                      "krakend-debugger-request",
-                      "krakend-debugger-response"
-                ]
-              }
-            }
+            ]
         },
         {
             "endpoint": "CustomerManagement/v1/customer/{id}",
@@ -158,15 +141,7 @@
                         }
                     }
                 }
-            ],
-            "extra_config":{
-                "plugin/req-resp-modifier":{
-                  "name": [
-                        "krakend-debugger-request",
-                        "krakend-debugger-response"
-                  ]
-                }
-            }
+            ]
         },
         {
             "endpoint": "/github/{user}",

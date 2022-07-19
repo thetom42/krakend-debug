@@ -1,0 +1,22 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: influx
+  annotations:
+    email: DL-VLCarmenCCSystemTeam@dli.telekom.com
+spec:
+  tls:
+    - hosts:
+        - $(INGRESS_HOSTNAME)
+      secretName: sst-influx-cert
+  rules:
+  - host: $(INGRESS_HOSTNAME)
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: influx
+            port:
+              name: influx

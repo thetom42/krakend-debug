@@ -4,10 +4,10 @@ metadata:
   annotations:
     haproxy.router.openshift.io/timeout: 25500ms
   labels:
-    app: carmen-jaeger
-  name: route-carmen-jaeger
+    app: jaeger
+  name: jaeger
 spec:
-  host: repaced-real-name
+  host: jaeger-thetom42-dev.apps.sandbox.x8i5.p1.openshiftapps.com
   port:
     targetPort: frontend
   tls:
@@ -15,6 +15,6 @@ spec:
     insecureEdgeTerminationPolicy: Redirect
   to:
     kind: Service
-    name: service-carmen-jaeger
+    name: jaeger
     weight: 100
 

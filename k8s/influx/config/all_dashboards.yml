@@ -1,0 +1,981 @@
+apiVersion: influxdata.com/v2alpha1
+kind: Dashboard
+metadata:
+    name: nifty-poitras-576001
+spec:
+    charts:
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 2f9fb5aa-2d8b-4746-980c-b25568e44ba8
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 7fa1577e-4fdb-4011-8663-6f4089c20a75
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 343bfded-e45f-4036-bea4-2292d1fe0187
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: requests w hosts
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "requests")
+                  |> filter(fn: (r) => r["_field"] == "total")
+                  |> filter(fn: (r) => r["complete"] == "true")
+                  |> filter(fn: (r) => r["error"] == "false")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> drop(columns: ["_field", "error", "complete", "_measurement"])
+                  |> yield(name: "req_w_hosts")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        yCol: _value
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: a9d646a3-85fa-4aaa-9aec-425f052345ac
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 694133b7-5110-4a0a-bf33-91973393d216
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 5f285347-710d-4e84-8224-93df1f44002c
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: response-time
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "router.response-time")
+                  |> filter(fn: (r) => r["_field"] == "max")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        yCol: _value
+        yPos: 4
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 2f9fb5aa-2d8b-4746-980c-b25568e44ba8
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 7fa1577e-4fdb-4011-8663-6f4089c20a75
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 343bfded-e45f-4036-bea4-2292d1fe0187
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: http_errors
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["status"] != "200" and r["_measurement"] == "responses" and r["_value"] != 0 and r["_field"] == "total")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                //  |> reduce(fn: (r, accumulator) => ({sum: r._value + accumulator.sum}), identity: {sum: 0})
+                //  |> yield(name: "http_error")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 6
+        widthRatio: 1
+        xCol: _time
+        yCol: _value
+        yPos: 8
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 9ba61a36-1f3d-4444-8378-75e54d7ff665
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 511ba158-b32f-431f-94ca-5ff068d4fcb4
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: c9879447-6a16-4810-891d-9380a9056743
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: kraken_errors
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: stacked
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["error"] == "true" and r["_field"] == "total" and r["_value"] != 0)
+                  |> drop(columns: ["_field","_measurement","error"])
+                  |> yield(name: "kraken_errors")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        yCol: _value
+        yPos: 12
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 2f9fb5aa-2d8b-4746-980c-b25568e44ba8
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 7fa1577e-4fdb-4011-8663-6f4089c20a75
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 343bfded-e45f-4036-bea4-2292d1fe0187
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: responses
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "responses")
+                  |> filter(fn: (r) => r["_field"] == "total")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> drop(columns: ["_measurement", "_field"])
+                  |> yield(name: "last")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        xPos: 4
+        yCol: _value
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: a9d646a3-85fa-4aaa-9aec-425f052345ac
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 694133b7-5110-4a0a-bf33-91973393d216
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 5f285347-710d-4e84-8224-93df1f44002c
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: response size
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "router.response-size")
+                  |> filter(fn: (r) => r["_field"] == "max")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        xPos: 4
+        yCol: _value
+        yPos: 4
+    name: REST stats
+---
+apiVersion: influxdata.com/v2alpha1
+kind: Dashboard
+metadata:
+    name: noshing-lamarr-d76001
+spec:
+    charts:
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 9ba61a36-1f3d-4444-8378-75e54d7ff665
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 511ba158-b32f-431f-94ca-5ff068d4fcb4
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: c9879447-6a16-4810-891d-9380a9056743
+            name: Nineteen Eighty Four
+            type: scale
+        geom: step
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: calls
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "responses")
+                  |> filter(fn: (r) => r["_field"] == "total")
+                  |> filter(fn: (r) => r["name"] == "/BsiLCtrl/v1/bsilctrl")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        yCol: _value
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: a9d646a3-85fa-4aaa-9aec-425f052345ac
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 694133b7-5110-4a0a-bf33-91973393d216
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 5f285347-710d-4e84-8224-93df1f44002c
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: response-time
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "router.response-time")
+                  |> filter(fn: (r) => r["_field"] == "max")
+                  |> filter(fn: (r) => r["name"] == "/BsiLCtrl/v1/bsilctrl")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        xPos: 4
+        yCol: _value
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: a9d646a3-85fa-4aaa-9aec-425f052345ac
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 694133b7-5110-4a0a-bf33-91973393d216
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 5f285347-710d-4e84-8224-93df1f44002c
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: response-size
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "router.response-size")
+                  |> filter(fn: (r) => r["_field"] == "max")
+                  |> filter(fn: (r) => r["name"] == "/BsiLCtrl/v1/bsilctrl")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        xPos: 8
+        yCol: _value
+    name: BsiLCtrl
+---
+apiVersion: influxdata.com/v2alpha1
+kind: Dashboard
+metadata:
+    name: wonderful-babbage-976001
+spec:
+    charts:
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 3cc3f356-edca-46c5-9d00-b9ef023fcf96
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: b8bf2491-c86a-4810-84a9-04b50ab9fc40
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: e4e58d95-4c0b-405e-bee9-68b6780e51dc
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: incoming calls
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "router")
+                  |> filter(fn: (r) => r["_field"] == "total")
+                  |> filter(fn: (r) => r["direction"] == "in")
+                  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        yCol: _value
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 3cc3f356-edca-46c5-9d00-b9ef023fcf96
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: b8bf2491-c86a-4810-84a9-04b50ab9fc40
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: e4e58d95-4c0b-405e-bee9-68b6780e51dc
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        heightRatio: 0.75
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 0.76
+        legendOrientationThreshold: -1
+        name: ww1
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "requests")
+                  |> filter(fn: (r) => r["_field"] == "total")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend:
+            colorizeRows: true
+            heightRatio: 0.75
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        yCol: _value
+        yPos: 4
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 3cc3f356-edca-46c5-9d00-b9ef023fcf96
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: b8bf2491-c86a-4810-84a9-04b50ab9fc40
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: e4e58d95-4c0b-405e-bee9-68b6780e51dc
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: MemStats.PauseNs
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "service.runtime.MemStats.PauseNs")
+                  |> filter(fn: (r) => r["_field"] == "mean")
+                  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        yCol: _value
+        yPos: 8
+      - axes:
+          - name: x
+        binCount: 20
+        colors:
+          - hex: '#8F8AF4'
+            id: 0350d0e2-1c54-4767-8d96-6f53f6239e17
+            name: Do Androids Dream of Electric Sheep?
+            type: scale
+          - hex: '#A51414'
+            id: 410edd85-b0d2-474e-a2e3-cf8255781858
+            name: Do Androids Dream of Electric Sheep?
+            type: scale
+          - hex: '#F4CF31'
+            id: 7743dc12-2e50-4b54-8ddd-9c417d0ca93c
+            name: Do Androids Dream of Electric Sheep?
+            type: scale
+        fillColumns:
+          - name
+          - status
+          - host
+          - _measurement
+        height: 4
+        kind: Histogram
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: crmdevice
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "responses")
+                  |> filter(fn: (r) => r["_field"] == "total")
+                  |> filter(fn: (r) => r["name"] == "/crmdevicecontractserver/ProductInventory/v2/product/deviceContract")
+                  |> aggregateWindow(every: 1s, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        staticLegend: {}
+        width: 4
+        xCol: _value
+        yPos: 12
+      - axes:
+          - name: x
+          - name: "y"
+        binSize: 55
+        colors:
+          - hex: '#000004'
+          - hex: '#110a30'
+          - hex: '#320a5e'
+          - hex: '#57106e'
+          - hex: '#781c6d'
+          - hex: '#9a2865'
+          - hex: '#bc3754'
+          - hex: '#d84c3e'
+          - hex: '#ed6925'
+          - hex: '#f98e09'
+          - hex: '#fbb61a'
+          - hex: '#f4df53'
+        height: 4
+        kind: Heatmap
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: -1
+        name: threads
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "runtime")
+                  |> filter(fn: (r) => r["_field"] == "NumThread")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend: {}
+        width: 4
+        xCol: _time
+        xPos: 4
+        yCol: _value
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 3cc3f356-edca-46c5-9d00-b9ef023fcf96
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: b8bf2491-c86a-4810-84a9-04b50ab9fc40
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: e4e58d95-4c0b-405e-bee9-68b6780e51dc
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: response-time
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "router.response-time")
+                  |> filter(fn: (r) => r["_field"] == "mean")
+                  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        xPos: 4
+        yCol: _value
+        yPos: 4
+      - axes:
+          - domain:
+              - 1.65470418e+12
+              - 1.654704474594e+12
+            name: x
+          - name: "y"
+        colors:
+          - hex: '#31C0F6'
+          - hex: '#BC00B8'
+          - hex: '#FF7E27'
+        height: 4
+        kind: Scatter
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: scatter
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "requests")
+                  |> filter(fn: (r) => r["_field"] == "total")
+                  |> filter(fn: (r) => r["layer"] == "backend")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend: {}
+        width: 4
+        xCol: _time
+        xPos: 4
+        yCol: _value
+        yPos: 8
+      - axes:
+          - name: x
+            scale: linear
+          - name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 3cc3f356-edca-46c5-9d00-b9ef023fcf96
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: b8bf2491-c86a-4810-84a9-04b50ab9fc40
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: e4e58d95-4c0b-405e-bee9-68b6780e51dc
+            name: Nineteen Eighty Four
+            type: scale
+        geom: step
+        height: 4
+        hoverDimension: auto
+        kind: Band
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        mainColumn: last
+        name: ww2
+        opacity: 1
+        orientationThreshold: 1e+08
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["status"] == "200")
+                  |> filter(fn: (r) => r["_measurement"] == "responses")
+                  |> filter(fn: (r) => r["_field"] == "total")
+                  |> filter(fn: (r) => r["name"] == "/PartyInteractionManagement/v2/partyInteraction/:id")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _value
+        xPos: 4
+        yCol: _time
+        yPos: 12
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 3cc3f356-edca-46c5-9d00-b9ef023fcf96
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: b8bf2491-c86a-4810-84a9-04b50ab9fc40
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: e4e58d95-4c0b-405e-bee9-68b6780e51dc
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: response-size
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "router.response-size")
+                  |> filter(fn: (r) => r["_field"] == "mean")
+                  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        xPos: 8
+        yCol: _value
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: "y"
+            scale: linear
+        colorizeRows: true
+        colors:
+          - hex: '#31C0F6'
+            id: 3cc3f356-edca-46c5-9d00-b9ef023fcf96
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: b8bf2491-c86a-4810-84a9-04b50ab9fc40
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: e4e58d95-4c0b-405e-bee9-68b6780e51dc
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: gauge
+        opacity: 1
+        orientationThreshold: 1e+08
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "router")
+                  |> filter(fn: (r) => r["_field"] == "gauge")
+                  |> filter(fn: (r) => r["direction"] == "out")
+                  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        staticLegend:
+            colorizeRows: true
+            opacity: 1
+            orientationThreshold: 1e+08
+            widthRatio: 1
+        width: 4
+        widthRatio: 1
+        xCol: _time
+        xPos: 8
+        yCol: _value
+        yPos: 4
+      - axes:
+          - name: x
+        colors:
+          - hex: '#31C0F6'
+            id: 3cc3f356-edca-46c5-9d00-b9ef023fcf96
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: b8bf2491-c86a-4810-84a9-04b50ab9fc40
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: e4e58d95-4c0b-405e-bee9-68b6780e51dc
+            name: Nineteen Eighty Four
+            type: scale
+        fillColumns:
+          - name
+          - status
+        height: 4
+        kind: Histogram
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: "400"
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "krakend")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "responses")
+                  |> filter(fn: (r) => r["_field"] == "total")
+                  |> filter(fn: (r) => r["status"] == "400" or r["status"] == "404" or r["status"] == "409")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend: {}
+        width: 4
+        xCol: _time
+        xPos: 8
+        yPos: 8
+    name: Sample krakend dashboard

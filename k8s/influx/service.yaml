@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: influx
+spec:
+  ports:
+    - name: influx
+      port: 8080
+      protocol: TCP
+      targetPort: influxdb
+  selector:
+    app: influxpod
+  sessionAffinity: None
+  type: ClusterIP

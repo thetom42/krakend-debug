@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deployment.yaml
+  - service.yaml
+  - route.yaml
+  - hpa.yaml
+  - pdb.yaml
+crds:
+  - ./crds/openshift-route.json
+configMapGenerator:
+  - name: krakend-config
+    files:
+    - ./krakend.json
+#  - name: krakend-settings
+commonLabels:
+  owner: thetom42
+  component: krakend
+commonAnnotations:
+  email: "thetom42@gmail.com"
+generatorOptions:
+  disableNameSuffixHash: false
+  labels:
+    app: krakend
+

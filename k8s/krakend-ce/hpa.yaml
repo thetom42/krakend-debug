@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: krakend  
 spec:
-  maxReplicas: 2
+  maxReplicas: 1
   minReplicas: 1
   scaleTargetRef:
     apiVersion: apps/v1

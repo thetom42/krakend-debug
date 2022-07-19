@@ -2,14 +2,14 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
-    app: carmen-jaeger
-  name: hpa-carmen-jaeger  
+    app: jaeger
+  name: jaeger  
 spec:
   maxReplicas: 1
   minReplicas: 1
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: carmen-jaeger-deployment
+    name: jaeger
   targetCPUUtilizationPercentage: 77
 

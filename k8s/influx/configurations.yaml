@@ -1,0 +1,18 @@
+# Default varReference list from Kustomize:
+# https://github.com/kubernetes-sigs/kustomize/blob/master/api/konfig/builtinpluginconsts/varreference.go
+
+# Add additional entries into `varReference` if you would like substitution to occur anywhere else.
+
+varReference:
+- kind: Deployment
+  path: spec/template/spec/containers/image
+- kind: Deployment
+  path: spec/template/spec/containers/name
+- kind: StatefulSet
+  path: spec/template/spec/containers/image
+- kind: StatefulSet
+  path: spec/template/spec/containers/name
+- kind: Ingress
+  path: spec/rules/host
+- kind: Ingress
+  path: spec/tls/hosts

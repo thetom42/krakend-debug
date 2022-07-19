@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: influx
+  labels:
+    git-commit: $(CI_COMMIT_SHA)
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: influxpod
+  serviceName: influx
+  template:
+    metadata:
+      labels:
+        app: influxpod
+    spec:
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: setup-cm
+        configMap:
+          name: influx-krakend-setup
+          defaultMode: 0550
+      - name: data-store
+        persistentVolumeClaim:
+          claimName: systemteam-influxvol-influx-uniq-0
+      containers:
+        - name: $(CONTAINER_NAME)
+          image: $(IMAGE_NAME)
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: influxdb
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: influxdb
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "1Gi"
+            requests:
+              cpu: "75m"
+          ports:
+            - containerPort: 8086
+              name: influxdb
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/influxdb2
+              name: data-store
+            - mountPath: /etc/influxdb2 
+              name: data-store
+            - mountPath: /docker-entrypoint-initdb.d
+              name: setup-cm
+            - mountPath: /config
+              name: setup-cm
+          env:
+            - name: DOCKER_INFLUXDB_INIT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: systemteam-secret
+                  key: DOCKER_INFLUXDB_INIT_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: influx-krakend-setup
+  volumeClaimTemplates:
+  - metadata:
+      name: systemteam-influxvol
+    spec:
+      storageClassName: standard
+      accessModes:
+        - ReadWriteOnce
+      volumeMode: Filesystem
+      resources:
+        requests:
+          storage: 5Gi

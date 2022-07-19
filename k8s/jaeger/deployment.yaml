@@ -1,33 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: carmen-jaeger-deployment
+  name: jaeger
   labels:
-    app: carmen-jaeger
+    app: jaeger
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: carmen-jaeger
+      app: jaeger
   template:
     metadata:
       labels:
-        app: carmen-jaeger
+        app: jaeger
     spec:
       volumes:
       - name: data-store
         persistentVolumeClaim:
-          claimName: pvc-carmen-jaeger
-      - name: carmen-volume
-        emptyDir: {}
+          claimName: jaeger
       - name: configmap-volume
         configMap:
-          name: carmen-jaeger-cm
+          name: jaeger
           defaultMode: 0777 ## but still write-protected :-(
       containers:
-        - name: carmen-jaeger
+        - name: jaeger
           imagePullPolicy: Always
           livenessProbe:
            httpGet:
@@ -49,7 +47,7 @@ spec:
            failureThreshold: 11
            successThreshold: 1
            timeoutSeconds: 5
-          image: dont_use_directly_but_through_an_environment_overlay
+          image: jaegertracing/all-in-one:latest
           ports:
           - name: frontend
             containerPort: 16686
@@ -67,14 +65,12 @@ spec:
               --log-level=debug
 #              while true; do echo ready_to_login; sleep 59;done
           volumeMounts:
-          - mountPath: /carmen
-            name: carmen-volume
           - name: configmap-volume
             mountPath: /config
           resources:
             limits:
               cpu: "300m"
-              memory: "1Gi"
+              memory: "500Mi"
             requests:
               cpu: "100m"
               memory: "200Mi"
