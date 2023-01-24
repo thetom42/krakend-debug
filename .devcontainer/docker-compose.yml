@@ -1,11 +1,17 @@
-version: "3"
+version: "3.8"
+
 services:
-#  grafana:
-#    build:
-#      dockerfile: Dockerfile
-#      context: ./grafana
-#    ports:
-#      - "3003:3000"
+
+  krakend_ce:
+    build:
+      dockerfile: krakend.Dockerfile
+    ports:
+      - 8080:8080
+    # Overrides default command so things don't shut down after the process ends.
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+
   influxdb:
     image: influxdb:2.2-alpine
     environment:
@@ -23,34 +29,37 @@ services:
     ports:
       - "16686:16686"
       - "14268:14268"
+
+#  grafana:
+#    build:
+#      dockerfile: Dockerfile
+#      context: ./grafana
+#    ports:
+#      - "3003:3000"
+
 #  rabbitmq:
 #    image: rabbitmq:3-management
 #    ports:
 #      - "15672:15672"
+
 #  fake_api:
 #    image: jaxgeller/lwan
 #    volumes:
 #      - ./data:/lwan/wwwroot
 #    ports:
 #      - "8000:8080"
+
 #  web:
 #    build:
 #      context: ./web
 #    ports:
 #      - "3000:3000"
+
 #  kraken_designer:
 #    image: devopsfaith/krakendesigner:v2.0
 #    ports:
 #      - 8787:80
-  krakend_ce:
-    build:
-      dockerfile: krakend.Dockerfile
-    ports:
-      - 8080:8080
-    # Overrides default command so things don't shut down after the process ends.
-    volumes:
-      - ..:/workspace:cached
-    command: sleep infinity
+
 #  jwt_revoke:
 #    build:
 #      context: ./jwt-revoker
